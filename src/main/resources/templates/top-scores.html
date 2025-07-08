@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Top Scores</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="d-flex flex-column justify-content-between align-items-center" style="height: 100vh; width: 100vw;">
+	<div th:replace="~{fragments :: navbar}"></div>
+
+	<div class="container">
+		<h2>Top 10 Scores</h2>
+		<div class="card text-center">
+			<div class="card-header">
+				<ul class="nav nav-tabs card-header-tabs">
+					<li class="nav-item">
+						<a class="nav-link active" href="/scores/top">Global</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/scores/top/personal">Personal</a>
+					</li>
+				</ul>
+			</div>
+			<div class="card-body">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Player</th>
+							<th>Score</th>
+							<th>Time (s)</th>
+							<th>Date</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="score : ${scores}">
+							<td th:text="${score.user.username}">Username</td>
+							<td th:text="${score.score}">100</td>
+							<td th:text="${score.time}">320</td>
+							<td th:text="${score.createdAt}">2025-07-07</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<a href="/scores/submit" class="btn btn-primary mt-2">Submit new Score</a>
+	</div>
+
+	<div th:replace="~{fragments :: footer}"></div>
+</body>
+
+</html>
