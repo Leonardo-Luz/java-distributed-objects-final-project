@@ -84,15 +84,15 @@ public class UserController {
 
 	@GetMapping("/profile/change-password")
 	public String showChangePasswordForm(Model model) {
-	    model.addAttribute("passwordDTO", new PasswordDTO());
-	    return "change-password";
+		model.addAttribute("passwordDTO", new PasswordDTO());
+		return "change-password";
 	}
 
 	@PostMapping("/profile/change-password")
 	public String processChangePassword(
-		@Valid @ModelAttribute("passwordDTO") PasswordDTO passwordDTO,
-		BindingResult result,
-		@AuthenticationPrincipal User user) {
+			@Valid @ModelAttribute("passwordDTO") PasswordDTO passwordDTO,
+			BindingResult result,
+			@AuthenticationPrincipal User user) {
 
 		if (result.hasErrors()) {
 			return "change-password";
@@ -102,7 +102,6 @@ public class UserController {
 			result.rejectValue("confirmNewPassword", "error.passwordDTO", "Passwords do not match");
 			return "change-password";
 		}
-
 
 		boolean changed = userService.changePassword(user, passwordDTO);
 		if (!changed) {
@@ -115,14 +114,15 @@ public class UserController {
 
 	@GetMapping("/profile/delete")
 	public String showDeleteAccountConfirmation() {
-	    return "delete-account";
+		return "delete-account";
 	}
 
 	@PostMapping("/profile/delete")
-	public String deleteAccount(@AuthenticationPrincipal User user, HttpServletRequest request, HttpServletResponse response) {
-	    userService.delete(user);
+	public String deleteAccount(@AuthenticationPrincipal User user, HttpServletRequest request,
+			HttpServletResponse response) {
+		userService.delete(user);
 
-	    new SecurityContextLogoutHandler().logout(request, response, null);
-	    return "redirect:/";
+		new SecurityContextLogoutHandler().logout(request, response, null);
+		return "redirect:/";
 	}
 }

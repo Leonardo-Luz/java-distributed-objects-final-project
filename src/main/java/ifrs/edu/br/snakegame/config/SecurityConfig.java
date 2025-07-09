@@ -27,7 +27,8 @@ public class SecurityConfig {
 		http .authorizeHttpRequests(auth -> auth
 						.requestMatchers("/scores/submit", "/profile").hasRole("USER")
 						.requestMatchers("/admin/**").hasRole("ADMIN")
-						.anyRequest().permitAll())
+						.requestMatchers("/login", "/css/**", "/js/**", "/images/**").permitAll()
+						.anyRequest().authenticated())
 				.formLogin(form -> form
 						.loginPage("/login")
 						.defaultSuccessUrl("/", true)
@@ -36,7 +37,15 @@ public class SecurityConfig {
 					.invalidateHttpSession(true)
 					.clearAuthentication(true)
 					.logoutUrl("/logout")
-					.permitAll());
+					.deleteCookies("JSESSIONID")
+					.logoutSuccessHandler((_, response, _) -> {
+						response.sendRedirect("/login?logout");
+					})
+					.permitAll())
+				.sessionManagement(session -> session
+					.invalidSessionUrl("/login?session=invalid")
+					.maximumSessions(1)
+					.expiredUrl("/login?session=expired"));
 
 		return http.build();
 	}
