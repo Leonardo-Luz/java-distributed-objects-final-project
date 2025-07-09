@@ -1,9 +1,14 @@
 package ifrs.edu.br.snakegame.controllers;
 
 import ifrs.edu.br.snakegame.dtos.ScoreDTO;
+import ifrs.edu.br.snakegame.entities.Score;
 import ifrs.edu.br.snakegame.entities.User;
 import ifrs.edu.br.snakegame.services.ScoreService;
 import jakarta.validation.Valid;
+
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -51,5 +56,16 @@ public class ScoreController {
 		scoreService.register(scoreDTO, user);
 
 		return "redirect:/scores/top";
+	}
+
+	@PostMapping("/delete/{id}")
+	public String deleteScore(@PathVariable UUID id, @AuthenticationPrincipal User user) {
+		Optional<Score> score = scoreService.findById(id);
+
+		if (score.isPresent())
+			if (score.get().getUser().equals(user))
+				scoreService.delete(score.get());
+
+		return "redirect:/scores/top/personal";
 	}
 }
